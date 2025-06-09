@@ -1,0 +1,293 @@
+{% extends "base.html" %}
+
+{% block title %}Code Generator - AI CodeNix{% endblock %}
+
+{% block content %}
+<div class="generator-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="generator-header text-center mb-5">
+                    <h1 class="page-title">
+                        <i class="fas fa-magic"></i>
+                        AI Code Generator
+                    </h1>
+                    <p class="page-subtitle">Transform your ideas into code with AI precision</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <!-- Input Section -->
+            <div class="col-lg-6">
+                <div class="generator-card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-edit"></i>
+                            Describe Your Code
+                        </h3>
+                    </div>
+                    
+                    <form method="POST" class="generator-form">
+                        {{ form.hidden_tag() }}
+                        
+                        <div class="form-group">
+                            {{ form.prompt.label(class="form-label") }}
+                            {{ form.prompt(class="form-control cyber-textarea", 
+                                         placeholder="e.g., Create a palindrome checker function\ne.g., Build a responsive portfolio website\ne.g., Generate a bubble sort algorithm",
+                                         value=prompt if prompt else '') }}
+                            {% if form.prompt.errors %}
+                                <div class="validation-feedback error">
+                                    {% for error in form.prompt.errors %}
+                                        <small>{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="form-group">
+                            {{ form.language.label(class="form-label") }}
+                            {{ form.language(class="form-select cyber-select") }}
+                            {% if form.language.errors %}
+                                <div class="validation-feedback error">
+                                    {% for error in form.language.errors %}
+                                        <small>{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="form-group">
+                            {{ form.submit(class="btn btn-primary btn-cyber btn-generate", id="generateBtn") }}
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Output Section -->
+            <div class="col-lg-6">
+                {% if generated_code %}
+                    <div class="generator-card">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <i class="fas fa-code"></i>
+                                Generated Code
+                            </h3>
+                            <div class="card-actions">
+                                <button class="btn btn-sm btn-secondary btn-cyber-outline" onclick="copyCode()">
+                                    <i class="fas fa-copy"></i> Copy
+                                </button>
+                                {% if code_type == 'html' %}
+                                    <button class="btn btn-sm btn-secondary btn-cyber-outline" onclick="togglePreview()">
+                                        <i class="fas fa-eye" id="previewIcon"></i> Preview
+                                    </button>
+                                {% endif %}
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-sm btn-secondary btn-cyber-outline dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="fas fa-download"></i> Export
+                                    </button>
+                                    <ul class="dropdown-menu export-dropdown">
+                                        {% if code_id %}
+                                            <li><a class="dropdown-item" href="{{ url_for('main.export_code', code_id=code_id, format='text') }}">
+                                                <i class="fas fa-file-alt"></i> Text File
+                                            </a></li>
+                                            <li><a class="dropdown-item" href="{{ url_for('main.export_code', code_id=code_id, format='pdf') }}">
+                                                <i class="fas fa-file-pdf"></i> PDF File
+                                            </a></li>
+                                        {% else %}
+                                            <li><a class="dropdown-item" href="#" onclick="exportSessionCode('text')">
+                                                <i class="fas fa-file-alt"></i> Text File
+                                            </a></li>
+                                            <li><a class="dropdown-item" href="#" onclick="exportSessionCode('pdf')">
+                                                <i class="fas fa-file-pdf"></i> PDF File
+                                            </a></li>
+                                        {% endif %}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="code-output">
+                            {% if code_type == 'html' %}
+                                <!-- HTML Preview Toggle -->
+                                <div id="codeView">
+                                    <pre class="code-container"><code class="language-html" id="generatedCode">{{ generated_code }}</code></pre>
+                                </div>
+                                <div id="previewView" style="display: none;">
+                                    <iframe id="htmlPreview" class="html-preview" sandbox="allow-scripts allow-same-origin"></iframe>
+                                </div>
+                            {% else %}
+                                <!-- Code Snippet -->
+                                <pre class="code-container"><code class="language-{{ language if language else 'javascript' }}" id="generatedCode">{{ generated_code }}</code></pre>
+                                
+                                {% if language == 'javascript' %}
+                                    <!-- JavaScript Test Area -->
+                                    <div class="test-area">
+                                        <h5>Test Your Code</h5>
+                                        <div class="input-group mb-3">
+                                            <input type="text" class="form-control cyber-input" id="testInput" placeholder="Enter test value">
+                                            <button class="btn btn-secondary btn-cyber-outline" onclick="testCode()">
+                                                <i class="fas fa-play"></i> Run
+                                            </button>
+                                        </div>
+                                        <div id="testOutput" class="test-output"></div>
+                                    </div>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="generator-card placeholder-card">
+                        <div class="placeholder-content">
+                            <i class="fas fa-code placeholder-icon"></i>
+                            <h3>Your Code Will Appear Here</h3>
+                            <p>Enter a prompt and select a language to generate code with AI</p>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+let previewVisible = false;
+
+function copyCode() {
+    const code = document.getElementById('generatedCode').textContent;
+    navigator.clipboard.writeText(code).then(function() {
+        showToast('Code copied to clipboard!', 'success');
+    }, function(err) {
+        showToast('Failed to copy code', 'error');
+    });
+}
+
+function togglePreview() {
+    const codeView = document.getElementById('codeView');
+    const previewView = document.getElementById('previewView');
+    const previewIcon = document.getElementById('previewIcon');
+    
+    if (!previewVisible) {
+        // Show preview
+        codeView.style.display = 'none';
+        previewView.style.display = 'block';
+        previewIcon.className = 'fas fa-code';
+        
+        // Load HTML into iframe
+        const code = document.getElementById('generatedCode').textContent;
+        const iframe = document.getElementById('htmlPreview');
+        iframe.srcdoc = code;
+        
+        previewVisible = true;
+    } else {
+        // Show code
+        codeView.style.display = 'block';
+        previewView.style.display = 'none';
+        previewIcon.className = 'fas fa-eye';
+        previewVisible = false;
+    }
+}
+
+function testCode() {
+    const code = document.getElementById('generatedCode').textContent;
+    const testInput = document.getElementById('testInput').value;
+    const output = document.getElementById('testOutput');
+    
+    try {
+        // Create a safe evaluation context
+        const func = new Function('input', code + '\n\n// Test execution\nif (typeof isPalindrome === "function") return isPalindrome(input);\nif (typeof factorial === "function") return factorial(parseInt(input));\nif (typeof bubbleSort === "function") return bubbleSort(input.split(",").map(n => parseInt(n.trim())));\nreturn "Function not recognized";');
+        
+        const result = func(testInput);
+        output.innerHTML = `<div class="test-success"><strong>Result:</strong> ${JSON.stringify(result)}</div>`;
+    } catch (error) {
+        output.innerHTML = `<div class="test-error"><strong>Error:</strong> ${error.message}</div>`;
+    }
+}
+
+function exportSessionCode(format) {
+    const code = document.getElementById('generatedCode').textContent;
+    const prompt = document.querySelector('textarea[name="prompt"]').value;
+    const language = document.querySelector('select[name="language"]').value;
+    
+    if (!code || !prompt || !language) {
+        showToast('Cannot export: Missing code or form data', 'error');
+        return;
+    }
+    
+    const exportData = {
+        code: code,
+        prompt: prompt,
+        language: language
+    };
+    
+    // Create a temporary form for file download
+    fetch(`/export_session/${format}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(exportData)
+    })
+    .then(response => {
+        if (response.ok) {
+            return response.blob();
+        }
+        throw new Error('Export failed');
+    })
+    .then(blob => {
+        // Create download link
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `code_${language}_${new Date().toISOString().slice(0,19).replace(/:/g,'-')}.${format}`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+        
+        showToast(`Code exported as ${format.toUpperCase()}!`, 'success');
+    })
+    .catch(error => {
+        console.error('Export error:', error);
+        showToast('Export failed. Please try again.', 'error');
+    });
+}
+
+function showToast(message, type) {
+    // Create toast element
+    const toast = document.createElement('div');
+    toast.className = `toast-message toast-${type}`;
+    toast.innerHTML = `<i class="fas fa-${type === 'success' ? 'check' : 'exclamation-triangle'}"></i> ${message}`;
+    
+    // Add to page
+    document.body.appendChild(toast);
+    
+    // Show and hide
+    setTimeout(() => toast.classList.add('show'), 100);
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => document.body.removeChild(toast), 300);
+    }, 3000);
+}
+
+// Form submission with loading state
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('.generator-form');
+    const generateBtn = document.getElementById('generateBtn');
+    
+    if (form && generateBtn) {
+        form.addEventListener('submit', function() {
+            generateBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating...';
+            generateBtn.disabled = true;
+        });
+    }
+    
+    // Initialize Prism highlighting
+    if (typeof Prism !== 'undefined') {
+        Prism.highlightAll();
+    }
+});
+</script>
+{% endblock %}

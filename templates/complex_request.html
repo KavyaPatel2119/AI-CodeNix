@@ -1,0 +1,252 @@
+{% extends "base.html" %}
+
+{% block title %}Complex Request - AI CodeNix{% endblock %}
+
+{% block content %}
+<div class="complex-request-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="request-header text-center mb-5">
+                    <h1 class="page-title">
+                        <i class="fas fa-cogs"></i>
+                        Complex Code Request
+                    </h1>
+                    <p class="page-subtitle">Need something more advanced? Let our expert developers create custom solutions for you.</p>
+                </div>
+                
+                <div class="complex-card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-rocket"></i>
+                            Tell Us About Your Project
+                        </h3>
+                        <p class="card-subtitle">Fill out this form and we'll get back to you within 24-48 hours with a detailed proposal.</p>
+                    </div>
+                    
+                    <form method="POST" class="complex-form">
+                        {{ form.hidden_tag() }}
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    {{ form.name.label(class="form-label") }}
+                                    {{ form.name(class="form-control cyber-input", placeholder="Your full name") }}
+                                    {% if form.name.errors %}
+                                        <div class="validation-feedback error">
+                                            {% for error in form.name.errors %}
+                                                <small>{{ error }}</small>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    {{ form.email.label(class="form-label") }}
+                                    {{ form.email(class="form-control cyber-input", placeholder="your.email@example.com") }}
+                                    {% if form.email.errors %}
+                                        <div class="validation-feedback error">
+                                            {% for error in form.email.errors %}
+                                                <small>{{ error }}</small>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    {{ form.phone.label(class="form-label") }}
+                                    {{ form.phone(class="form-control cyber-input", placeholder="+1 (555) 123-4567") }}
+                                    {% if form.phone.errors %}
+                                        <div class="validation-feedback error">
+                                            {% for error in form.phone.errors %}
+                                                <small>{{ error }}</small>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    {{ form.project_type.label(class="form-label") }}
+                                    {{ form.project_type(class="form-select cyber-select") }}
+                                    {% if form.project_type.errors %}
+                                        <div class="validation-feedback error">
+                                            {% for error in form.project_type.errors %}
+                                                <small>{{ error }}</small>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    {{ form.languages.label(class="form-label") }}
+                                    {{ form.languages(class="form-select cyber-select") }}
+                                    {% if form.languages.errors %}
+                                        <div class="validation-feedback error">
+                                            {% for error in form.languages.errors %}
+                                                <small>{{ error }}</small>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    {{ form.timeline.label(class="form-label") }}
+                                    {{ form.timeline(class="form-select cyber-select") }}
+                                    {% if form.timeline.errors %}
+                                        <div class="validation-feedback error">
+                                            {% for error in form.timeline.errors %}
+                                                <small>{{ error }}</small>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    {{ form.budget.label(class="form-label") }}
+                                    {{ form.budget(class="form-select cyber-select") }}
+                                    {% if form.budget.errors %}
+                                        <div class="validation-feedback error">
+                                            {% for error in form.budget.errors %}
+                                                <small>{{ error }}</small>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            {{ form.description.label(class="form-label") }}
+                            {{ form.description(class="form-control cyber-textarea", 
+                                             placeholder="Describe your project in detail. What are you trying to build? What problem does it solve? Who is your target audience?",
+                                             rows="5") }}
+                            <small class="form-text">Minimum 50 characters. Be as detailed as possible.</small>
+                            {% if form.description.errors %}
+                                <div class="validation-feedback error">
+                                    {% for error in form.description.errors %}
+                                        <small>{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="form-group">
+                            {{ form.requirements.label(class="form-label") }}
+                            {{ form.requirements(class="form-control cyber-textarea", 
+                                               placeholder="List specific features, integrations, or technical requirements. Examples: user authentication, payment processing, real-time chat, mobile responsive, API integrations, etc.",
+                                               rows="4") }}
+                            <small class="form-text">List all technical requirements and features you need.</small>
+                            {% if form.requirements.errors %}
+                                <div class="validation-feedback error">
+                                    {% for error in form.requirements.errors %}
+                                        <small>{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="form-group text-center">
+                            {{ form.submit(class="btn btn-primary btn-cyber btn-lg", id="submitBtn") }}
+                        </div>
+                    </form>
+                    
+                    <div class="request-info">
+                        <h4><i class="fas fa-info-circle"></i> What Happens Next?</h4>
+                        <div class="row">
+                            <div class="col-md-4 text-center">
+                                <div class="info-step">
+                                    <div class="step-icon">1</div>
+                                    <h5>Review</h5>
+                                    <p>Our team analyzes your requirements</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4 text-center">
+                                <div class="info-step">
+                                    <div class="step-icon">2</div>
+                                    <h5>Proposal</h5>
+                                    <p>We send you a detailed quote & timeline</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4 text-center">
+                                <div class="info-step">
+                                    <div class="step-icon">3</div>
+                                    <h5>Development</h5>
+                                    <p>We build your custom solution</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Character counters for textareas
+document.addEventListener('DOMContentLoaded', function() {
+    const description = document.getElementById('description');
+    const requirements = document.getElementById('requirements');
+    
+    function updateCharCount(textarea, min, max) {
+        const count = textarea.value.length;
+        let feedback = textarea.parentNode.querySelector('.char-count');
+        
+        if (!feedback) {
+            feedback = document.createElement('small');
+            feedback.className = 'char-count form-text';
+            textarea.parentNode.appendChild(feedback);
+        }
+        
+        feedback.textContent = `${count}/${max} characters`;
+        
+        if (count < min) {
+            feedback.style.color = '#ff4757';
+        } else if (count > max * 0.9) {
+            feedback.style.color = '#ffa726';
+        } else {
+            feedback.style.color = '#00ff88';
+        }
+    }
+    
+    if (description) {
+        description.addEventListener('input', () => updateCharCount(description, 50, 2000));
+        updateCharCount(description, 50, 2000);
+    }
+    
+    if (requirements) {
+        requirements.addEventListener('input', () => updateCharCount(requirements, 20, 2000));
+        updateCharCount(requirements, 20, 2000);
+    }
+    
+    // Form submission
+    const form = document.querySelector('.complex-form');
+    const submitBtn = document.getElementById('submitBtn');
+    
+    if (form && submitBtn) {
+        form.addEventListener('submit', function() {
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending Request...';
+            submitBtn.disabled = true;
+        });
+    }
+});
+</script>
+{% endblock %}

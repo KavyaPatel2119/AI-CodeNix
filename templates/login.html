@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block title %}Login - AI CodeNix{% endblock %}
+
+{% block content %}
+<div class="auth-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-lg-5">
+                <div class="auth-card">
+                    <div class="auth-header">
+                        <h2 class="auth-title">
+                            <i class="fas fa-sign-in-alt"></i>
+                            Welcome Back
+                        </h2>
+                        <p class="auth-subtitle">Sign in to your AI CodeNix account</p>
+                    </div>
+                    
+                    <form method="POST" class="auth-form">
+                        {{ form.hidden_tag() }}
+                        
+                        <div class="form-group">
+                            {{ form.username.label(class="form-label") }}
+                            {{ form.username(class="form-control cyber-input", placeholder="Enter your username") }}
+                            {% if form.username.errors %}
+                                <div class="validation-feedback error">
+                                    {% for error in form.username.errors %}
+                                        <small>{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="form-group">
+                            {{ form.password.label(class="form-label") }}
+                            {{ form.password(class="form-control cyber-input", placeholder="Enter your password") }}
+                            {% if form.password.errors %}
+                                <div class="validation-feedback error">
+                                    {% for error in form.password.errors %}
+                                        <small>{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="form-group">
+                            {{ form.submit(class="btn btn-primary btn-cyber w-100") }}
+                        </div>
+                    </form>
+                    
+                    <div class="auth-footer">
+                        <p>Don't have an account? <a href="{{ url_for('main.register') }}" class="auth-link">Register here</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Real-time validation for non-empty fields
+document.addEventListener('DOMContentLoaded', function() {
+    const username = document.getElementById('username');
+    const password = document.getElementById('password');
+    
+    function validateField(field, message) {
+        field.addEventListener('blur', function() {
+            const value = this.value.trim();
+            let feedback = this.parentNode.querySelector('.validation-feedback');
+            
+            if (!value) {
+                if (!feedback) {
+                    feedback = document.createElement('div');
+                    feedback.className = 'validation-feedback error';
+                    this.parentNode.appendChild(feedback);
+                }
+                feedback.innerHTML = `<small>${message}</small>`;
+            } else if (feedback) {
+                feedback.innerHTML = '<small class="text-success">✅ Valid</small>';
+            }
+        });
+    }
+    
+    if (username) validateField(username, 'Username is required');
+    if (password) validateField(password, 'Password is required');
+});
+</script>
+{% endblock %}

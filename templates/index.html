@@ -1,0 +1,161 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="hero-section">
+    <div class="container">
+        <div class="row align-items-center min-vh-100">
+            <div class="col-lg-6">
+                <div class="hero-content">
+                    <h1 class="hero-title">AI CodeNix</h1>
+                    <h2 class="hero-subtitle">Code the Future</h2>
+                    <p class="hero-description">Transform Ideas into Code with AI Precision</p>
+                    <div class="hero-buttons">
+                        <a href="{{ url_for('main.generator') }}" class="btn btn-primary btn-cyber me-3">
+                            <i class="fas fa-rocket"></i> Get Started
+                        </a>
+                        {% if not session.user_id %}
+                            <a href="{{ url_for('main.login') }}" class="btn btn-secondary btn-cyber-outline">
+                                <i class="fas fa-sign-in-alt"></i> Login
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="hero-visual">
+                    <div class="code-preview">
+                        <div class="code-header">
+                            <span class="code-dot"></span>
+                            <span class="code-dot"></span>
+                            <span class="code-dot"></span>
+                        </div>
+                        <div class="code-content">
+                            <pre><code class="language-javascript">function generateCode(prompt) {
+  // AI-powered code generation
+  return aiService.generate({
+    prompt: prompt,
+    language: 'javascript',
+    quality: 'production'
+  });
+}
+
+// Transform ideas into reality
+const result = generateCode(
+  'Create a palindrome checker'
+);</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Features Section -->
+<section class="features-section py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center mb-5">
+                <h2 class="section-title">Powerful Features</h2>
+                <p class="section-subtitle">Everything you need to generate code with AI</p>
+            </div>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-lg-3 col-md-6">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <h3 class="feature-title">Static HTML Pages</h3>
+                    <p class="feature-description">Generate complete, responsive HTML pages with modern CSS and JavaScript</p>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-layer-group"></i>
+                    </div>
+                    <h3 class="feature-title">Multi-Language Support</h3>
+                    <p class="feature-description">JavaScript, Python, Java, C++, and C code snippets with best practices</p>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-history"></i>
+                    </div>
+                    <h3 class="feature-title">History & Downloads</h3>
+                    <p class="feature-description">Save your generated code and access it anytime with export options</p>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3 class="feature-title">AI-Powered</h3>
+                    <p class="feature-description">Leveraging Google Gemini AI for intelligent code generation</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Sample Outputs Section -->
+<section class="samples-section py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center mb-5">
+                <h2 class="section-title">Sample Outputs</h2>
+                <p class="section-subtitle">See what AI CodeNix can create for you</p>
+            </div>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-lg-6">
+                <div class="sample-card">
+                    <div class="sample-header">
+                        <h4>Palindrome Checker (Python)</h4>
+                    </div>
+                    <div class="sample-code">
+                        <pre><code class="language-python">def is_palindrome(s: str) -> bool:
+    """Check if a string is a palindrome"""
+    # Remove non-alphanumeric, convert to lowercase
+    s = ''.join(c.lower() for c in s if c.isalnum())
+    return s == s[::-1]
+
+# Test cases
+print(is_palindrome("radar"))  # True
+print(is_palindrome("A man, a plan, a canal: Panama"))  # True</code></pre>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-6">
+                <div class="sample-card">
+                    <div class="sample-header">
+                        <h4>Responsive Portfolio (HTML)</h4>
+                    </div>
+                    <div class="sample-code">
+                        <pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;Portfolio&lt;/title&gt;
+    &lt;style&gt;
+        body { font-family: Arial, sans-serif; margin: 0; }
+        .hero { background: linear-gradient(...); }
+    &lt;/style&gt;
+&lt;/head&gt;</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
